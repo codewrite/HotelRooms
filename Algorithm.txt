@@ -1,0 +1,70 @@
+Introduction
+------------
+Easy case is if numbers have leading zeros. But when we don't have leading zeros (i.e. "9" rather than "009") we just have to work out how many zeros to remove.
+We can break the processing down so that we do each digit individually and add the numbers of digits at each stage.
+
+
+digitIndex = 0 Special case:
+  add 1 to each bin then:
+  add each digit above * numberDigits[0] (if there are digits above)  [Make this a method]
+
+digitIndex = 1
+
+10    =>   1, 2, 1, 1, 1, 1, 1, 1, 1, 1
+20    =>   2, 12, 3, 2, 2, 2, 2, 2, 2, 2
+30    =>   3, 13, 13, 4, 3, 3, 3, 3, 3, 3
+40    =>   4, 14, 14, 14, 5, 4, 4, 4, 4, 4
+50    =>   5, 15, 15, 15, 15, 6, 5, 5, 5, 5
+60    =>   6, 16, 16, 16, 16, 16, 7, 6, 6, 6
+70    =>   7, 17, 17, 17, 17, 17, 17, 8, 7, 7
+80    =>   8, 18, 18, 18, 18, 18, 18, 18, 9, 8
+90    =>   9, 19, 19, 19, 19, 19, 19, 19, 19, 10
+
+digitIndex = 2
+
+100   =>   11, 21, 20, 20, 20, 20, 20, 20, 20, 20
+200   =>   31, 140, 41, 40, 40, 40, 40, 40, 40, 40
+300   =>   51, 160, 160, 61, 60, 60, 60, 60, 60, 60
+400   =>   71, 180, 180, 180, 81, 80, 80, 80, 80, 80
+500   =>   91, 200, 200, 200, 200, 101, 100, 100, 100, 100
+600   =>   111, 220, 220, 220, 220, 220, 121, 120, 120, 120
+700   =>   131, 240, 240, 240, 240, 240, 240, 141, 140, 140
+800   =>   151, 260, 260, 260, 260, 260, 260, 260, 161, 160
+900   =>   171, 280, 280, 280, 280, 280, 280, 280, 280, 181
+
+digitIndex = 3
+
+1000  =>   192, 301, 300, 300, 300, 300, 300, 300, 300, 300
+2000  =>   492, 1600, 601, 600, 600, 600, 600, 600, 600, 600
+3000  =>   792, 1900, 1900, 901, 900, 900, 900, 900, 900, 900
+4000  =>   1092, 2200, 2200, 2200, 1201, 1200, 1200, 1200, 1200, 1200
+5000  =>   1392, 2500, 2500, 2500, 2500, 1501, 1500, 1500, 1500, 1500
+6000  =>   1692, 2800, 2800, 2800, 2800, 2800, 1801, 1800, 1800, 1800
+7000  =>   1992, 3100, 3100, 3100, 3100, 3100, 3100, 2101, 2100, 2100
+8000  =>   2292, 3400, 3400, 3400, 3400, 3400, 3400, 3400, 2401, 2400
+9000  =>   2592, 3700, 3700, 3700, 3700, 3700, 3700, 3700, 3700, 2701
+
+Pseudo Code
+-----------
+
+Add numberDigits[digitIndex] * digitIndex * (10 ^ (digitIndex -1)) to each of digitCounts[0..9]
+Add 1 to digitCounts[numberDigits[digitIndex]]
+Add (10 ^ digitIndex) to each of digitCounts[1..numberDigits[digitIndex]-1]
+If there are no digits above:
+  Subtract fn_zeros(digitIndex) from digitCounts[0]
+else
+  add each digit above * numberDigits[digitIndex] * (10 ^ digitIndex) [Make this a method]
+  if (numberDigits[digitIndex] > 0)
+	Add (10 ^ digitIndex) to digitCounts[0]
+
+
+fn_zeros(digitIndex):
+  If digitIndex = 2  => return 9
+  If digitIndex = 3  => return 99 + 9
+  If digitIndex = 4  => return 99 + 99 + 9
+  etc...
+
+Implementation
+--------------
+  
+Code was build with Visual Studio 2010 and tested with NUnit 2.6.2
